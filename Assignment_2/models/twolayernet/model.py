@@ -70,6 +70,11 @@ class TwoLayerNetv1(object):
         # of shape (N, C).                                                          #
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+        
+        first_layer = np.dot(X, W1) + b1
+        second_layer = np.maximum(0, first_layer) 
+        scores = np.dot(second_layer, W2) + b2
+        softmax_scores = np.exp(scores)/ np.sum(np.exp(scores), axis=1, keepdims=True)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -117,6 +122,7 @@ class TwoLayerNetv2(TwoLayerNetv1):
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
+        softmax_scores = self.forward(X)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -134,6 +140,8 @@ class TwoLayerNetv2(TwoLayerNetv1):
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
+        loss = -np.sum(np.log(softmax_scores[np.arange(N), y])) / N
+        loss += reg * (np.sum(W1 * W1) + np.sum(W2 * W2))
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
