@@ -183,7 +183,7 @@ class TwoLayerNetv3(TwoLayerNetv2):
         # Thus you can simply use the method from the parent class.                   #
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)****
-
+        scores = self.forward(X)
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         # If the targets are not given then jump out, we're done
@@ -202,7 +202,7 @@ class TwoLayerNetv3(TwoLayerNetv2):
         # from the parent (i.e v2) class.                                             #
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
+        loss = self.compute_loss(X, y, reg)
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         # Backward pass: compute gradients
@@ -213,7 +213,15 @@ class TwoLayerNetv3(TwoLayerNetv2):
         # grads['W1'] should store the gradient on W1, and be a matrix of same size #
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+        z2 = X.dot(W1) + b1
+        a2 = np.maximum(0, z2)
+        a1 = X
 
+        grads["W2"] = 1 / N * (np.dot(a2.T, scores - np.eye(W2.shape[1])[y])) + 2 * reg * W2
+        grads["b2"] = 1 / N * np.sum(scores - np.eye(W2.shape[1])[y], axis=0)
+
+        grads["W1"] = 1 / N * (np.dot(a1.T, np.dot(scores - np.eye(W2.shape[1])[y], W2.T) * (a2 > 0))) + 2 * reg * W1
+        grads["b1"] = 1 / N * np.sum(np.dot(scores - np.eye(W2.shape[1])[y], W2.T) * (a2 > 0), axis=0)
         
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
