@@ -77,6 +77,5 @@ class ConvNet(BaseModel):
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****        
         out = self.layers(x)
-        out = None
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return out
