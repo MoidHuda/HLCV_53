@@ -14,7 +14,12 @@ class ConvNet(BaseModel):
         # (basically store them in self)                                  #
         ###################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
+        self.input_size = input_size
+        self.hidden_layers = hidden_layers
+        self.num_classes = num_classes
+        self.activation = activation
+        self.norm_layer = norm_layer
+        self.drop_prob = drop_prob
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         self._build_model()
 
@@ -30,7 +35,18 @@ class ConvNet(BaseModel):
         #################################################################################
         layers = []
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+        layers = []
+        layers.append(nn.Conv2d(self.input_size, self.hidden_layers[0], kernel_size=3, padding=1))
+        layers.append(nn.ReLU())
 
+        for i in range(len(self.hidden_layers) - 1):
+            layers.append(nn.Conv2d(self.hidden_layers[i], self.hidden_layers[i+1], kernel_size=3, padding=1))
+            layers.append(nn.ReLU())
+
+        layers.append(nn.Flatten())
+        layers.append(nn.Linear(self.hidden_layers[-1] * 32 * 32, self.num_classes))
+
+        self.layers = nn.Sequential(*layers)
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
     def _normalize(self, img):
@@ -60,7 +76,7 @@ class ConvNet(BaseModel):
         # Do not apply any softmax on the logits.                                   #
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****        
-
+        out = self.layers(x)
         out = None
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return out
