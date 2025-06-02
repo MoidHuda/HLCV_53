@@ -66,7 +66,18 @@ class ConvNet(BaseModel):
         # You can use matlplotlib.imshow to visualize an image in python                #
         #################################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-        pass
+        
+        fig, axis = plt.subplots(8, 16, figsize=(16, 8))
+        filters = self.layers[0].weight.data.cpu().numpy().shape[0]
+        for i in range(8 * 16):
+            plot = axis[i // 16, i % 16]
+            if i < filters:
+                filter_img = self.layers[0].weight.data.cpu().numpy()[i]
+                normalized_img = self._normalize(filter_img)
+                plot.imshow(normalized_img.transpose(1, 2, 0))
+            plot.axis('off')
+
+        plt.show()
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
     def forward(self, x):
