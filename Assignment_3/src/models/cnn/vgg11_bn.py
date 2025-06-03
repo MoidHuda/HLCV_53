@@ -15,6 +15,12 @@ class VGG11_bn(BaseModel):
         # Note that this config is for the MLP head (and not the VGG backbone) #
         ########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+        self.layer_config = layer_config
+        self.num_classes = num_classes
+        self.activation = activation
+        self.norm_layer = norm_layer
+        self.fine_tune = fine_tune
+        self.weights = weights if weights is not None else 'DEFAULT'
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         self._build_model()
@@ -31,7 +37,24 @@ class VGG11_bn(BaseModel):
         # the fine_tune flag.                                                           #
         #################################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-        pass
+        backbone = vgg11_bn(weights=self.weights, progress=True)
+        print(backbone.features)
+        layers = []
+        self.layer_config = [512] + self.layer_config
+        for i in range(1, len(self.layer_config)):
+            layer_size = self.layer_config[i]
+            layers.append(nn.Linear(self.layer_config[i-1], layer_size))
+            layers.append(self.norm_layer(layer_size) if self.norm_layer else nn.Identity())
+            layers.append(self.activation())
+
+        backbone.features.trainable = self.fine_tune
+
+        self.model = nn.Sequential(
+            backbone.features,
+            nn.Flatten(),
+            *layers,
+            nn.Linear(self.layer_config[-1], self.num_classes)
+        )
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -41,7 +64,7 @@ class VGG11_bn(BaseModel):
         # Do not apply any softmax on the output                                        #
         #################################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-        out = None
+        out = self.model(x)
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return out
     

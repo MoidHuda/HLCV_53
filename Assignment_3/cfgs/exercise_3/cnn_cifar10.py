@@ -174,6 +174,23 @@ q3a_aug7_experiment["name"] = "CIFAR10_CNN_3a_Aug7"
 q3a_aug7_experiment["trainer_config"]["epochs"] = 30
 q3a_aug7_experiment["data_args"]["transform_preset"] = "CIFAR10_WithFlipAndGrayScaleAndColorJitter"
 
+q3b_do_02_experiment = deepcopy(q2b_2a_epoch_experiment)
+q3b_do_02_experiment["name"] = "CIFAR10_CNN_3b_DO_0_2"
+q3b_do_02_experiment["trainer_config"]["epochs"] = 20
+q3b_do_02_experiment["model_args"]["drop_prob"] = 0.2
+
+q3b_do_04_experiment = deepcopy(q3b_do_02_experiment)
+q3b_do_04_experiment["name"] = "CIFAR10_CNN_3b_DO_0_4"
+q3b_do_04_experiment["model_args"]["drop_prob"] = 0.4
+
+q3b_do_06_experiment = deepcopy(q3b_do_02_experiment)
+q3b_do_06_experiment["name"] = "CIFAR10_CNN_3b_DO_0_6"
+q3b_do_06_experiment["model_args"]["drop_prob"] = 0.6
+
+q3b_do_09_experiment = deepcopy(q3b_do_02_experiment)
+q3b_do_09_experiment["name"] = "CIFAR10_CNN_3b_DO_0_9"
+q3b_do_09_experiment["model_args"]["drop_prob"] = 0.9
+
 
 
 q3b_dropout_experiment = ()
