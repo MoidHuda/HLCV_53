@@ -131,7 +131,19 @@ class BaseTrainer:
                     # (e.g for loss values we would want min, but for accuracy we want max.)                        #
                     #################################################################################################   
                     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-                    pass
+                    if self.monitor_mode == 'min':
+                        is_best = log[self.monitor_metric] < self.monitor_best
+                    else:
+                        is_best = log[self.monitor_metric] > self.monitor_best
+                    if is_best:
+                        self.monitor_best = log[self.monitor_metric]
+                        self.best_epoch = self.current_epoch
+                        path = os.path.join(self.checkpoint_dir, f'best_val_model.pth')
+                        self.save_model(path=path)
+                        self.logger.info(f"New best model found at epoch {self.current_epoch} with {self.monitor_metric}={self.monitor_best:.5f}. Model saved to {path}")
+                    else:
+                        self.not_improved_count += 1
+                        self.logger.info(f"Epoch {self.current_epoch} did not improve {self.monitor_metric}. Current best is {self.monitor_best:.5f} at epoch {self.best_epoch}.")
                     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
                     ############################################################################################
@@ -139,7 +151,10 @@ class BaseTrainer:
                     # the last self.early_stop steps, see if you should break the training loop.               #
                     ############################################################################################
                     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
+                    if self.not_improved_count >= self.early_stop:
+                        self.logger.info(f"Early stopping triggered at epoch {self.current_epoch}. No improvement in {self.not_improved_count} epochs.")
+                        self.logger.info(f"Best model was at epoch {self.best_epoch} with {self.monitor_metric}={self.monitor_best:.5f}.")
+                        break
 
                     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
                 else:
@@ -172,7 +187,7 @@ class BaseTrainer:
         ###  TODO  ################################################
         # Based on the self.current_epoch and self.eval_interval, determine if we should evaluate.
         # You can take hint from saving logic implemented in BaseTrainer.train() method
-        return True
+        return self.current_epoch % self.eval_period == 0 and self.current_epoch != 0
         #########################################################
     
     @abstractmethod # To be implemented by the child classes!
