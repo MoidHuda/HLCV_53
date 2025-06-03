@@ -35,16 +35,17 @@ class ConvNet(BaseModel):
         #################################################################################
         layers = []
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-        layers = []
-        layers.append(nn.Conv2d(self.input_size, self.hidden_layers[0], kernel_size=3, padding=1))
-        layers.append(nn.ReLU())
+        
+        in_channels = self.input_size
+        for out_channels in self.hidden_layers:
+            layers.append(nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1))
+            layers.append(self.activation())
+            layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
 
-        for i in range(len(self.hidden_layers) - 1):
-            layers.append(nn.Conv2d(self.hidden_layers[i], self.hidden_layers[i+1], kernel_size=3, padding=1))
-            layers.append(nn.ReLU())
+            in_channels = out_channels
 
         layers.append(nn.Flatten())
-        layers.append(nn.Linear(self.hidden_layers[-1] * 32 * 32, self.num_classes))
+        layers.append(nn.Linear(512, self.num_classes))
 
         self.layers = nn.Sequential(*layers)
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
