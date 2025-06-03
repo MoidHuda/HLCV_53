@@ -138,6 +138,7 @@ class BaseTrainer:
                     if is_best:
                         self.monitor_best = log[self.monitor_metric]
                         self.best_epoch = self.current_epoch
+                        self.not_improved_count = 0
                         path = os.path.join(self.checkpoint_dir, f'best_val_model.pth')
                         self.save_model(path=path)
                         self.logger.info(f"New best model found at epoch {self.current_epoch} with {self.monitor_metric}={self.monitor_best:.5f}. Model saved to {path}")
