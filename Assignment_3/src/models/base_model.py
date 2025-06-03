@@ -26,6 +26,7 @@ class BaseModel(nn.Module):
         #### TODO #######################################
         # Print the number of **trainable** parameters  #
         # by appending them to ret_str                  #
+
         #################################################
         num_params = sum(p.numel() for p in self.parameters() if p.requires_grad)
         ret_str += f"\nNumber of trainable parameters: {num_params:,d}"
@@ -44,4 +45,16 @@ class BaseModel(nn.Module):
         ret_str += f"Total number of parameters: {sum(p.numel() for p in self.parameters()):,d}\n"
         ret_str += f"Total number of trainable parameters: {num_params:,d}\n"
         ret_str += "=" * 80 + "\n"
+
+        #################################################        
+
+        # sum = 0
+        # ret_str += "\nTrainable parameters:"
+        # for name, param in self.named_parameters():
+        #     if param.requires_grad:
+        #         ret_str += f"\n{name}: {param.numel()} parameters"
+        #         sum+=param.numel()
+        # total_params = sum
+
+        # ret_str += f"\nTotal trainable parameters: {total_params}"
         return ret_str

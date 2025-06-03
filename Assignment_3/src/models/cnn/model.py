@@ -20,7 +20,6 @@ class ConvNet(BaseModel):
         self.activation = activation
         self.norm_layer = norm_layer
         self.drop_prob = drop_prob
-
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         self._build_model()
 
@@ -36,6 +35,7 @@ class ConvNet(BaseModel):
         #################################################################################
         layers = []
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+
         layers.append(nn.Conv2d(self.input_size, self.hidden_layers[0], kernel_size=3, stride=1, padding=1))
         layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         layers.append(self.activation())
@@ -52,6 +52,19 @@ class ConvNet(BaseModel):
         layers.append(nn.Flatten())
         layers.append(nn.Linear(self.hidden_layers[-1], self.num_classes))
         self.model = nn.Sequential(*layers)
+
+        # in_channels = self.input_size
+        # size = 32
+        # for out_channels in self.hidden_layers:
+        #     layers.append(nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=1, padding=1))
+        #     layers.append(self.activation())
+        #     layers.append(nn.MaxPool2d(kernel_size=2, stride=2,padding=1))
+        #     in_channels = out_channels
+        #     size = ((size + 2 * 1 - 2) // 2) + 1
+
+        # layers.append(nn.Flatten())
+        # layers.append (nn.Linear(self.hidden_layers[-1] * size * size, self.num_classes))
+        # self.layers = nn.Sequential(*layers)
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
     def _normalize(self, img):
@@ -71,22 +84,32 @@ class ConvNet(BaseModel):
         # You can use matlplotlib.imshow to visualize an image in python                #
         #################################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-        filters = self.model[0].weight.data.cpu().numpy()
-        filters = self._normalize(filters)
-        num_filters = filters.shape[0]
-        filter_size = filters.shape[2]
-        grid_size = int(np.ceil(np.sqrt(num_filters)))
-        print(f"Number of filters: {num_filters}, Filter size: {filter_size}, Grid size: {grid_size}")
-        grid = np.zeros((grid_size * (filter_size + 1), grid_size * (filter_size + 1), 3), dtype=np.float32)
-        for i in range(num_filters):
-            row = i // grid_size
-            col = i % grid_size
-            start_row = row * (filter_size + 1)
-            start_col = col * (filter_size + 1)
-            grid[start_row:start_row + filter_size, start_col:start_col + filter_size, :] = filters[i].transpose(1, 2, 0)
-        plt.figure(figsize=(10, 10))
-        plt.imshow(grid)
-        plt.axis('off')
+        # filters = self.model[0].weight.data.cpu().numpy()
+        # filters = self._normalize(filters)
+        # num_filters = filters.shape[0]
+        # filter_size = filters.shape[2]
+        # grid_size = int(np.ceil(np.sqrt(num_filters)))
+        # print(f"Number of filters: {num_filters}, Filter size: {filter_size}, Grid size: {grid_size}")
+        # grid = np.zeros((grid_size * (filter_size + 1), grid_size * (filter_size + 1), 3), dtype=np.float32)
+        # for i in range(num_filters):
+        #     row = i // grid_size
+        #     col = i % grid_size
+        #     start_row = row * (filter_size + 1)
+        #     start_col = col * (filter_size + 1)
+        #     grid[start_row:start_row + filter_size, start_col:start_col + filter_size, :] = filters[i].transpose(1, 2, 0)
+        # plt.figure(figsize=(10, 10))
+        # plt.imshow(grid)
+        # plt.axis('off')
+        
+        fig, axis = plt.subplots(8, 16, figsize=(16, 8))
+        filters = self.layers[0].weight.data.cpu().numpy().shape[0]
+        for i in range(8 * 16):
+            plot = axis[i // 16, i % 16]
+            if i < filters:
+                filter_img = self.layers[0].weight.data.cpu().numpy()[i]
+                normalized_img = self._normalize(filter_img)
+                plot.imshow(normalized_img.transpose(1, 2, 0))
+            plot.axis('off')
         plt.show()
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
