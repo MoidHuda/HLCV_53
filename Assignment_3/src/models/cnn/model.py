@@ -36,8 +36,11 @@ class ConvNet(BaseModel):
         layers = []
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         
-        
-        for i in range(len(self.hidden_layers) - 1):
+        layers.append(nn.Conv2d(self.input_size, self.hidden_layers[0], kernel_size=3, stride=1, padding=1))
+        layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
+        layers.append(self.activation())
+
+        for i in range(len(self.hidden_layers) - 1):    
             layers.append(nn.Conv2d(self.hidden_layers[i], self.hidden_layers[i+1], kernel_size=3, padding=1))            
             layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
             layers.append(self.activation())
