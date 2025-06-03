@@ -20,7 +20,59 @@ presets = dict(
     # E.g. CIFAR10_WithFlip=dict()
     ##############
     CIFAR10_WithFlip=dict(
+        train=transforms.Compose([
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        ]),
     ),
+    CIFAR10_WithCrop=dict(
+        train=transforms.Compose([
+            transforms.RandomCrop(32, padding=4),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        ]),
+    ),
+    CIFAR10_WithFlipAndCrop=dict(
+        train=transforms.Compose([
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomCrop(32, padding=4),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        ]),
+    ),
+    CIFAR10_WithColorJitter=dict(
+        train=transforms.Compose([
+            transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        ]),
+    ),
+    CIFAR10_WithGrayScale=dict(
+        train=transforms.Compose([
+            transforms.RandomGrayscale(p=0.3),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        ]),
+    ),
+    CIFAR10_WithFlipAndGrayScale=dict(
+        train=transforms.Compose([
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomGrayscale(p=0.3),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        ]),
+    ),
+    CIFAR10_WithFlipAndGrayScaleAndColorJitter=dict(
+        train=transforms.Compose([
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomGrayscale(p=0.3),
+            transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        ]),
+    ),
+
 
     #  This one is for Question 4.
     CIFAR10_VGG=dict(

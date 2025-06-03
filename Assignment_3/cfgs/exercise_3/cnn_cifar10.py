@@ -142,13 +142,38 @@ q2b_2a_epoch_experiment["trainer_config"]["epochs"] = 50
 
 q2c_earlystop_experiment = deepcopy(q2b_2a_epoch_experiment)
 q2c_earlystop_experiment["name"] = "CIFAR10_CNN_2c_EarlyStop"
-q2c_earlystop_experiment["trainer_config"]["monitor"] = "max eval_top1"
 q2c_earlystop_experiment["trainer_config"]["early_stop"] = 4
 
-q3a_aug1_experiment = ()
-# q3a_aug2_experiment = ()
-# q3a_aug3_experiment = ()
-# ...
+q3a_aug1_experiment = deepcopy(q2b_2a_epoch_experiment)
+q3a_aug1_experiment["name"] = "CIFAR10_CNN_3a_Aug1"
+q3a_aug1_experiment["trainer_config"]["epochs"] = 20
+q3a_aug1_experiment["data_args"]["transform_preset"] = "CIFAR10_WithFlip"
+
+q3a_aug2_experiment = deepcopy(q3a_aug1_experiment)
+q3a_aug2_experiment["name"] = "CIFAR10_CNN_3a_Aug2"
+q3a_aug2_experiment["data_args"]["transform_preset"] = "CIFAR10_WithCrop"
+
+q3a_aug3_experiment = deepcopy(q3a_aug1_experiment)
+q3a_aug3_experiment["name"] = "CIFAR10_CNN_3a_Aug3"
+q3a_aug3_experiment["data_args"]["transform_preset"] = "CIFAR10_WithFlipAndCrop"
+
+q3a_aug4_experiment = deepcopy(q3a_aug1_experiment)
+q3a_aug4_experiment["name"] = "CIFAR10_CNN_3a_Aug4"
+q3a_aug4_experiment["data_args"]["transform_preset"] = "CIFAR10_WithColorJitter"
+
+q3a_aug5_experiment = deepcopy(q3a_aug1_experiment)
+q3a_aug5_experiment["name"] = "CIFAR10_CNN_3a_Aug5"
+q3a_aug5_experiment["data_args"]["transform_preset"] = "CIFAR10_WithGrayScale"
+
+q3a_aug6_experiment = deepcopy(q3a_aug1_experiment)
+q3a_aug6_experiment["name"] = "CIFAR10_CNN_3a_Aug6"
+q3a_aug6_experiment["data_args"]["transform_preset"] = "CIFAR10_WithFlipAndGrayScale"
+
+q3a_aug7_experiment = deepcopy(q3a_aug1_experiment)
+q3a_aug7_experiment["name"] = "CIFAR10_CNN_3a_Aug7"
+q3a_aug7_experiment["trainer_config"]["epochs"] = 30
+q3a_aug7_experiment["data_args"]["transform_preset"] = "CIFAR10_WithFlipAndGrayScaleAndColorJitter"
+
 
 
 q3b_dropout_experiment = ()
