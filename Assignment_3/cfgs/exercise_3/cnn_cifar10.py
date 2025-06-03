@@ -7,6 +7,7 @@ from src.data_loaders.data_modules import CIFAR10DataModule
 from src.trainers.cnn_trainer import CNNTrainer
 from src.models.cnn.model import ConvNet
 from src.models.cnn.metric import TopKAccuracy
+from copy import deepcopy
 
 q1_experiment = dict(
     name = 'CIFAR10_CNN',
@@ -129,17 +130,17 @@ q2a_normalization_experiment = dict(
     ),
 )
 
-q2b_1a_epoch_experiment = q1_experiment.copy()
+q2b_1a_epoch_experiment = deepcopy(q1_experiment)
 q2b_1a_epoch_experiment["name"] = "CIFAR10_CNN_1a_Epoch50"
 q2b_1a_epoch_experiment["trainer_config"]["monitor"] = "max eval_top1"
 q2b_1a_epoch_experiment["trainer_config"]["epochs"] = 50
 
-q2b_2a_epoch_experiment = q2a_normalization_experiment.copy()
+q2b_2a_epoch_experiment = deepcopy(q2a_normalization_experiment)
 q2b_2a_epoch_experiment["name"] = "CIFAR10_CNN_2a_Epoch50"
 q2b_2a_epoch_experiment["trainer_config"]["monitor"] = "max eval_top1"
 q2b_2a_epoch_experiment["trainer_config"]["epochs"] = 50
 
-q2c_earlystop_experiment = q2b_2a_epoch_experiment.copy()
+q2c_earlystop_experiment = deepcopy(q2b_2a_epoch_experiment)
 q2c_earlystop_experiment["name"] = "CIFAR10_CNN_2c_EarlyStop"
 q2c_earlystop_experiment["trainer_config"]["monitor"] = "max eval_top1"
 q2c_earlystop_experiment["trainer_config"]["early_stop"] = 4
